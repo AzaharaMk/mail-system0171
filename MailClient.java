@@ -11,6 +11,12 @@ public class MailClient
     private MailServer server;
     // The user running this client.
     private String user;
+    //Modo de autorespuesta.
+    private boolean answerMode; 
+   //Asunto de la autorespuesta
+    private String autoSubjet;
+   //Mensaje de la autorespuesta
+    private String autoMessage;
 
     /**
      * Create a mail client run by user and attached to the given server.
@@ -19,6 +25,9 @@ public class MailClient
     {
         this.server = server;
         this.user = user;
+        answerMode = false;
+        autoSubjet = "";
+        autoMessage = "";
     }
 
     /**
@@ -26,7 +35,12 @@ public class MailClient
      */
     public MailItem getNextMailItem()
     {
-        return server.getNextMailItem(user);
+        MailItem item = server.getNextMailItem(user);
+        if (answerMode && item != null)
+        { 
+            sendMailItem(item.getFrom(), autoMessage, autoSubjet);
+        }
+        return item;
     }
 
     /**
@@ -50,10 +64,21 @@ public class MailClient
      * @param to The intended recipient.
      * @param message The text of the message to be sent.
      */
-    public void sendMailItem(String to,String subject, String message)
+    public void sendMailItem(String to, String subjet, String message)
     {
-        MailItem item = new MailItem(user, to,subject, message);
+        MailItem item = new MailItem(user, to, subjet, message);
         server.post(item);
+    }
+    
+    public void setAutomaticAnswer(boolean answer)
+    {
+        answerMode = answer;
+    }
+    
+    public void setAutoContent (String subjet, String message)
+    {
+        autoSubjet = subjet;
+        autoMessage = message;
     }
     
     public void numberMail()
