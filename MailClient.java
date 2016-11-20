@@ -55,4 +55,9 @@ public class MailClient
         MailItem item = new MailItem(user, to,subject, message);
         server.post(item);
     }
+    
+    public void numberMail()
+    {
+        System.out.println("emails almacenados: " +server.howManyMailItems(user));
+    }
 }
