@@ -14,7 +14,7 @@ public class MailClient
     //Modo de autorespuesta.
     private boolean answerMode; 
    //Asunto de la autorespuesta
-    private String autoSubjet;
+    private String autoSubject;
    //Mensaje de la autorespuesta
     private String autoMessage;
 
@@ -26,7 +26,7 @@ public class MailClient
         this.server = server;
         this.user = user;
         answerMode = false;
-        autoSubjet = "";
+        autoSubject = "";
         autoMessage = "";
     }
 
@@ -38,7 +38,7 @@ public class MailClient
         MailItem item = server.getNextMailItem(user);
         if (answerMode && item != null)
         { 
-            sendMailItem(item.getFrom(), autoMessage, autoSubjet);
+            sendMailItem(item.getFrom(), autoMessage, autoSubject);
         }
         return item;
     }
@@ -64,9 +64,9 @@ public class MailClient
      * @param to The intended recipient.
      * @param message The text of the message to be sent.
      */
-    public void sendMailItem(String to, String subjet, String message)
+    public void sendMailItem(String to, String subject, String message)
     {
-        MailItem item = new MailItem(user, to, subjet, message);
+        MailItem item = new MailItem(user, to, subject, message);
         server.post(item);
     }
     
@@ -75,9 +75,9 @@ public class MailClient
         answerMode = answer;
     }
     
-    public void setAutoContent (String subjet, String message)
+    public void setAutoContent (String subject, String message)
     {
-        autoSubjet = subjet;
+        autoSubject = subject;
         autoMessage = message;
     }
     
