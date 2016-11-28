@@ -30,6 +30,7 @@ public class MailClient
         answerMode = false;
         autoSubject = "";
         autoMessage = "";
+        ultimoMensaje = null;
     }
 
     /**
@@ -39,10 +40,24 @@ public class MailClient
     {
         //Recibimos  algo  del servidor
         MailItem item = server.getNextMailItem(user);
+        
+        //Si lo que recibimos es un mensaje de correo...
         if (item != null)
         {
-            ultimoMensaje = item;
+            //Compruebo si el mensaje es spam
+            if (item.getMessage().contains("regalo") ||
+                item.getMessage().contains("promocion"))
+            {
+                item = null;
+            }
+            
+            //En caso de no ser spam...
+            else
+            {
+                ultimoMensaje = item;
+            }
         }
+        
         //Si lo que recibimos es un email y la  respuesta automática está activa...
         if (answerMode && item != null)
         { 
@@ -57,7 +72,6 @@ public class MailClient
              *  sendMailItem(item.getFrom(), autoMessage, autoSubject);
              */
         }
-        ultimoMensaje = item;
         //Devolvemos lo recibido por el servidor
         return item;
     }
@@ -68,18 +82,30 @@ public class MailClient
      */
     public void printNextMailItem()
     {
-        MailItem item = getNextMailItem();
+        MailItem item = server.getNextMailItem(user);
         
         if (item != null)
         {
             ultimoMensaje = item;
         }
         
-        if(item == null) {
+        if(item == null) 
+        {
             System.out.println("No new mail.");
         }
-        else {
-            item.print();
+        else 
+        {
+            if (item.getMessage().contains ("regalo") ||
+                item.getMessage().contains ("promocion"))
+                {
+                    //El email es spam
+                    System.out.println("Has recibido un mensaje con spam");
+                }
+            else 
+            {
+                //El mensaje no es spam
+                item.print();
+            }
         }
     }
 
